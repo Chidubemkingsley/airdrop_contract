@@ -1,66 +1,69 @@
-## Foundry
+# VulnerableAirdrop Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Overview
 
-Foundry consists of:
+The `VulnerableAirdrop` contract allows users to claim tokens by providing a valid signature from a designated signer. However, this contract contains a critical vulnerability that allows signature replay attacks, enabling users to claim tokens multiple times using the same valid signature.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+This repository includes the vulnerable contract, a secure version of the contract with the replay attack mitigation, and tests demonstrating the vulnerability and its exploit using Foundry.
 
-## Documentation
+## Files
 
-https://book.getfoundry.sh/
+- `src/VulnerableAirdrop.sol`: The vulnerable airdrop contract.
+- `src/SecureAirdrop.sol`: The secure version of the airdrop contract with nonce-based replay protection.
+- `test/VulnerableAirdropTest.t.sol`: Test file demonstrating the exploit of the signature replay vulnerability.
+- `test/SecureAirdropTest.t.sol`: Test file demonstrating the fixed contract's resistance to signature replay attacks.
+- `src/ERC20Mock.sol`: A mock ERC20 token used for testing.
 
-## Usage
+## Vulnerability Details
 
-### Build
+### Vulnerability: Signature Replay Attack
 
-```shell
-$ forge build
+**Severity**: High
+
+**Description**: The `VulnerableAirdrop` contract does not keep track of used signatures, allowing attackers to reuse a valid signature to claim tokens multiple times.
+
+### Impact
+
+The signature replay vulnerability allows malicious users to claim tokens multiple times with the same signature, leading to significant financial losses for the contract owner and depleting the contract's token balance.
+
+### Recommendation
+
+To prevent signature replay attacks, it is crucial to keep track of used signatures or nonces. The `SecureAirdrop` contract implements this solution by including a nonce in the signed message and storing each user's nonce.
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have Foundry installed. If not, you can install it by following the instructions in the [Foundry Book](https://book.getfoundry.sh/getting-started/installation.html).
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Chidubemkingsley/airdrop_contract.git
+cd VulnerableAirdrop
 ```
 
-### Test
+Install dependencies:
 
-```shell
-$ forge test
+```bash
+forge install
 ```
 
-### Format
+### Running the Tests
 
-```shell
-$ forge fmt
+To run the tests, use the following command:
+
+```bash
+forge test
 ```
 
-### Gas Snapshots
+This command will execute the tests in the `test/VulnerableAirdropTest.t.sol` and `test/SecureAirdropTest.t.sol` files, demonstrating the vulnerability and its fix.
 
-```shell
-$ forge snapshot
-```
 
-### Anvil
+## License
 
-```shell
-$ anvil
-```
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+---

@@ -1,3 +1,6 @@
 [submodule "airdrop/lib/forge-std"]
 	path = airdrop/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "airdrop/lib/openzeppelin-contracts"]
+	path = airdrop/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
